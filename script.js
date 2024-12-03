@@ -11,6 +11,7 @@ const myQuestions = [
     question: "The Academy Awards are also known as the Oscars.",
     answers: ["True", "False"],
     correctAnswers: ["True"],
+    type: "multiple-choice",
   },
 
   // Multiple Choice Questions
@@ -18,6 +19,7 @@ const myQuestions = [
     question: "Who has hosted the Oscars the most times?",
     answers: ["Billy Crystal", "Bob Hope", "Ellen DeGeneres", "Hugh Jackman"],
     correctAnswers: ["Bob Hope"],
+    type: "multiple-choice",
   },
 
   // Checkbox Questions
@@ -25,6 +27,7 @@ const myQuestions = [
     question: "Which of these movies have won Best Picture?",
     answers: ["Titanic", "The Godfather", "Citizen Kane", "Forrest Gump"],
     correctAnswers: ["Titanic", "The Godfather", "Forrest Gump"],
+    type: "checkbox",
   },
 
   {
@@ -36,6 +39,7 @@ const myQuestions = [
       "Martin Scorsese",
     ],
     correctAnswers: ["Steven Spielberg", "Clint Eastwood"],
+    type: "checkbox",
   },
 ];
 
@@ -57,15 +61,33 @@ function displayQuestion() {
   const currentQuiz = myQuestions[questionIndex];
   theQuestion.innerHTML = `${questionIndex + 1}. ${currentQuiz.question}`;
 
-  currentQuiz.answers.forEach((answer) => {
-    const button = document.createElement("button");
-    button.innerHTML = answer.correctAnswers;
-    button.classList.add("answerBtn");
-    button.addEventListener("click", () => {
-      selectAnswer(button);
+  if (currentQuiz.type === "multiple-choice") {
+    currentQuiz.answers.forEach((answer) => {
+      const button = document.createElement("button");
+      button.innerHTML = answer;
+      button.classList.add("answerBtn");
+      button.addEventListener("click", () => selectAnswer(button));
+      alternativBtn.appendChild(button);
     });
-    alternativBtn.appendChild(button);
-  });
+  } else if (currentQuiz.type === "checkbox") {
+    currentQuiz.answers.forEach((answer) => {
+      const checkboxContainer = document.createElement("div");
+      checkboxContainer.classList.add("checkbox-container");
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.value = answer;
+      checkbox.id = `checkbox-${answer}`;
+
+      const label = document.createElement("label");
+      label.htmlFor = `checkbox-${answer}`;
+      label.innerText = answer;
+
+      checkboxContainer.appendChild(checkbox);
+      checkboxContainer.appendChild(label);
+      alternativBtn.appendChild(checkboxContainer);
+    });
+  }
 }
 function resetState() {
   nextBtn.style.display = "none";
@@ -74,19 +96,37 @@ function resetState() {
 }
 
 function selectAnswer(button) {
-  Array.from(alternativBtn.children).forEach((btn) => {
-    btn.classList.remove("selected");
-  });
-  button.classList.add("selected");
-  selectedAnswer = button.innerHTML;
-  nextBtn.style.display = "block";
+  if (myQuestions[questionIndex].type === "multiple-choice") {
+    Array.from(alternativBtn.children).forEach((btn) => {
+      btn.classList.remove("selected");
+    });
+    button.classList.add("selected");
+    selectedAnswer = button.innerHTML;
+    nextBtn.style.display = "block";
+  } else if (myQuestions[questionIndex].type === "checkbox") {
+    selectedAnswer = Array.from(
+      alternativBtn.querySelectorAll("input[type='checkbox']:checked")
+    ).map((checkbox) => checkbox.value);
+  }
 }
+
 nextBtn.addEventListener("click", () => {
   const currentQuiz = myQuestions[questionIndex];
 
-  if (selectedAnswer && currentQuiz.correctAnswers.includes(selectedAnswer)) {
-    score++;
+  if (currentQuiz.type === "multiple-choice") {
+    if (selectedAnswer && currentQuiz.correctAnswers.includes(selectedAnswer)) {
+      score++;
+    }
+  } else if (currentQuiz.type === "checkbox") {
+    const isCorrect =
+      selectedAnswer &&
+      selectedAnswer.length === currentQuiz.correctAnswers.length &&
+      selectedAnswer.every((ans) => currentQuiz.correctAnswers.includes(ans));
+    if (isCorrect) {
+      score++;
+    }
   }
+
   questionIndex++;
   if (questionIndex < myQuestions.length) {
     displayQuestion();
@@ -99,12 +139,22 @@ function showResults() {
   resetState();
   quiz.style.display = "none";
   results.innerHTML = `
-    <h2>Quiz Completed</h2>
+    <h2>Quiz Completed!</h2>
     <p>You scored ${score} out of ${myQuestions.length}!</p>
-    <button onclick="startQuiz()">Restart</button>
   `;
-  nextBtn.innerHTML = `Play again`;
-  nextBtn.style.display = "block";
+
+  const playAgain = document.createElement("button");
+  playAgain.textContent = "Play again";
+  playAgain.classList.add("nextBtn");
+  playAgain.style.display = "block";
+  playAgain.onclick = startQuiz;
+  results.appendChild(playAgain);
 }
 
 startQuiz();
+
+// function scorePlayBack (){
+//   score.style.display ="block";
+//   let scoreResult = math.round(100 * score/question.length);
+
+// }
