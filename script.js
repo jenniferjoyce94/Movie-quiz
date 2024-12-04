@@ -11,7 +11,8 @@ const myQuestions = [
     question: "The Academy Awards are also known as the Oscars.",
     answers: ["True", "False"],
     correctAnswers: ["True"],
-    type: "multiple-choice",
+    yourAnswer: [],
+    type: "true-false",
   },
 
   // Multiple Choice Questions
@@ -58,37 +59,52 @@ function startQuiz() {
 
 function displayQuestion() {
   resetState();
-  const currentQuiz = myQuestions[questionIndex];
-  theQuestion.innerHTML = `${questionIndex + 1}. ${currentQuiz.question}`;
+  const currentQuestion = myQuestions[questionIndex];
+  theQuestion.textContent = `${questionIndex + 1}. ${currentQuestion.question}`;
 
-  if (currentQuiz.type === "multiple-choice") {
-    currentQuiz.answers.forEach((answer) => {
-      const button = document.createElement("button");
-      button.innerHTML = answer;
-      button.classList.add("answerBtn");
-      button.addEventListener("click", () => selectAnswer(button));
-      alternativBtn.appendChild(button);
-    });
-  } else if (currentQuiz.type === "checkbox") {
-    currentQuiz.answers.forEach((answer) => {
-      const checkboxContainer = document.createElement("div");
-      checkboxContainer.classList.add("checkbox-container");
-
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.value = answer;
-      checkbox.id = `checkbox-${answer}`;
-
-      const label = document.createElement("label");
-      label.htmlFor = `checkbox-${answer}`;
-      label.innerText = answer;
-
-      checkboxContainer.appendChild(checkbox);
-      checkboxContainer.appendChild(label);
-      alternativBtn.appendChild(checkboxContainer);
-    });
+  if (
+    currentQuestion.type === "muliple-choice" ||
+    currentQuestion.type === "true-false"
+  ) {
+    createAnswerButtons(currentQuestion.answers);
+  } else if (currentQuestion.type === "checkbox") {
+    createCheckboxOptions(currentQuestion.answers);
+  } else {
+    createAnswerButtons(currentQuestion.answers);
   }
 }
+
+function createAnswerButtons(answers) {
+  answers.forEach((answer) => {
+    const button = document.createElement("button");
+    button.textContent = answer;
+    button.classList.add("answerBtn");
+    button.addEventListener("click", () => selectAnswer(button));
+    alternativBtn.appendChild(button);
+  });
+}
+
+function createCheckboxOptions(answers) {
+  answers.forEach((answer) => {
+    const checkboxContainer = document.createElement("div");
+    checkboxContainer.classList.add("checkbox-container");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.value = answer;
+    checkbox.id = `checkbox-${answer}`;
+    checkbox.addEventListener("click", () => selectAnswer(checkbox));
+
+    const label = document.createElement("label");
+    label.htmlFor = checkbox.id;
+    label.textContent = answer;
+
+    checkboxContainer.appendChild(checkbox);
+    checkboxContainer.appendChild(label);
+    alternativBtn.appendChild(checkboxContainer);
+  });
+}
+
 function resetState() {
   nextBtn.style.display = "none";
   alternativBtn.innerHTML = "";
@@ -96,7 +112,10 @@ function resetState() {
 }
 
 function selectAnswer(button) {
-  if (myQuestions[questionIndex].type === "multiple-choice") {
+  if (
+    myQuestions[questionIndex].type === "multiple-choice" ||
+    myQuestions[questionIndex].type === "true-false"
+  ) {
     Array.from(alternativBtn.children).forEach((btn) => {
       btn.classList.remove("selected");
     });
@@ -107,13 +126,21 @@ function selectAnswer(button) {
     selectedAnswer = Array.from(
       alternativBtn.querySelectorAll("input[type='checkbox']:checked")
     ).map((checkbox) => checkbox.value);
+    if (selectedAnswer.length !== 0) {
+      nextBtn.style.display = "block";
+    } else {
+      console.log("test");
+      nextBtn.style.display = "none";
+    }
   }
 }
 
 nextBtn.addEventListener("click", () => {
   const currentQuiz = myQuestions[questionIndex];
-
-  if (currentQuiz.type === "multiple-choice") {
+  if (
+    currentQuiz.type === "multiple-choice" ||
+    currentQuiz.type === "true-false"
+  ) {
     if (selectedAnswer && currentQuiz.correctAnswers.includes(selectedAnswer)) {
       score++;
     }
@@ -148,13 +175,51 @@ function showResults() {
   playAgain.classList.add("nextBtn");
   playAgain.style.display = "block";
   playAgain.onclick = startQuiz;
+  const showResults = document.createElement("button");
+  showResults.textContent = "Show result";
+  showResults.classList.add("nextBtn");
+  showResults.style.display = "block";
+  showResults.onclick = () => {
+    const result = showEndResults();
+    container.appendChild(result);
+  };
+  playAgain.onclick = startQuiz;
   results.appendChild(playAgain);
+  results.appendChild(showResults);
 }
 
 startQuiz();
 
-// function scorePlayBack (){
-//   score.style.display ="block";
-//   let scoreResult = math.round(100 * score/question.length);
+function showEndResults() {
+  const resultsContainer = document.createElement("div");
 
-// }
+  myQuestions.forEach((question) => {
+    console.log(question);
+    const questionDiv = document.createElement("div");
+    questionDiv.classList.add("question-result");
+
+    const correctAnswersTitle = document.createElement("h4");
+    correctAnswersTitle.textContent = "Correct Answers:";
+    questionDiv.appendChild(correctAnswersTitle);
+
+    question.correctAnswers.forEach((correctAnswer) => {
+      const correctAnswerElement = document.createElement("p");
+      correctAnswerElement.textContent = correctAnswer.value;
+      questionDiv.appendChild(correctAnswerElement);
+    });
+
+    const yourAnswersTitle = document.createElement("h4");
+    yourAnswersTitle.textContent = "Your Answers:";
+    questionDiv.appendChild(yourAnswersTitle);
+
+    question.yourAnswers.forEach((yourAnswer) => {
+      const yourAnswerElement = document.createElement("p");
+      yourAnswerElement.textContent = yourAnswer.value;
+      questionDiv.appendChild(yourAnswerElement);
+    });
+
+    resultsContainer.appendChild(questionDiv);
+  });
+
+  return resultsContainer;
+}
