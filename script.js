@@ -165,9 +165,30 @@ nextBtn.addEventListener("click", () => {
 function showResults() {
   resetState();
   quiz.style.display = "none";
+
+  const allQuestions = myQuestions.length;
+  const getProcent = (score / allQuestions) * 100;
+
+  let resultMessage = "";
+  let resultColor = "";
+
+  if (getProcent < 50) {
+    resultMessage = "Oops! Seems like you had a blackout during the movie.";
+    resultColor = "red";
+  } else if (getProcent >= 50 && getProcent <= 75) {
+    resultMessage =
+      "You know most things, but maybe you missed the end credits!";
+    resultColor = "orangered";
+  } else {
+    resultMessage =
+      "PERFECTION! You are like Quentin Tarantino and Steven Spielberg all in one person!";
+    resultColor = "green";
+  }
+
   results.innerHTML = `
-    <h2>Quiz Completed!</h2>
-    <p>You scored ${score} out of ${myQuestions.length}!</p>
+  <h2> Your Result:</h2>  
+    <p style="color: ${resultColor};">${resultMessage}
+    You got ${score} out ${allQuestions} questions. </p>
   `;
 
   const playAgain = document.createElement("button");
@@ -175,51 +196,30 @@ function showResults() {
   playAgain.classList.add("nextBtn");
   playAgain.style.display = "block";
   playAgain.onclick = startQuiz;
-  const showResults = document.createElement("button");
-  showResults.textContent = "Show result";
-  showResults.classList.add("nextBtn");
-  showResults.style.display = "block";
-  showResults.onclick = () => {
-    const result = showEndResults();
-    container.appendChild(result);
+
+  const seeAnswers = document.createElement("button");
+  seeAnswers.innerHTML = "See you anwsers here";
+  seeAnswers.classList.add("nextBtn");
+  seeAnswers.style.display = "block";
+  seeAnswers.onclick = () => {
+    const displayResult = showEndResults();
+    results.appendChild(displayResult);
   };
-  playAgain.onclick = startQuiz;
+
+  results.appendChild(seeAnswers);
   results.appendChild(playAgain);
-  results.appendChild(showResults);
 }
 
 startQuiz();
 
-function showEndResults() {
-  const resultsContainer = document.createElement("div");
+// const showEndResults = ()=>{
+// const resultContainer = document.createElement("div");
 
-  myQuestions.forEach((question) => {
-    console.log(question);
-    const questionDiv = document.createElement("div");
-    questionDiv.classList.add("question-result");
+// myQuestions.forEach((question) => {
+//   const questionDiv = createElement("div");
+//   questionDiv.classList.add("questionResult");
 
-    const correctAnswersTitle = document.createElement("h4");
-    correctAnswersTitle.textContent = "Correct Answers:";
-    questionDiv.appendChild(correctAnswersTitle);
-
-    question.correctAnswers.forEach((correctAnswer) => {
-      const correctAnswerElement = document.createElement("p");
-      correctAnswerElement.textContent = correctAnswer.value;
-      questionDiv.appendChild(correctAnswerElement);
-    });
-
-    const yourAnswersTitle = document.createElement("h4");
-    yourAnswersTitle.textContent = "Your Answers:";
-    questionDiv.appendChild(yourAnswersTitle);
-
-    question.yourAnswers.forEach((yourAnswer) => {
-      const yourAnswerElement = document.createElement("p");
-      yourAnswerElement.textContent = yourAnswer.value;
-      questionDiv.appendChild(yourAnswerElement);
-    });
-
-    resultsContainer.appendChild(questionDiv);
-  });
-
-  return resultsContainer;
-}
+//   const correctQuestion = document.createElement("div");
+//   questionDiv.appendChild()
+// });
+// }
