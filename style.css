@@ -204,9 +204,14 @@ body.dark-mode .checkbox-container:hover {
   background: var(--text-color-light);
   color: var(--background-color-light);
   border-radius: 10px;
+  border: #dbb648 solid 2px;
 }
 
-body.dark-mode input[type="checkbox"]:checked + label {
-  background: var(--text-color-dark);
-  color: var(--background-color-dark);
+div.questionResult {
+  margin: 20px 0;
+  padding: 10px;
+  font-size: 1.5rem;
+}
+h4 {
+  border-bottom: #2b2b2b solid 1px;
 }

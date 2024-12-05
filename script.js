@@ -68,7 +68,7 @@ function displayQuestion() {
   theQuestion.textContent = `${questionIndex + 1}. ${currentQuestion.question}`;
 
   if (
-    currentQuestion.type === "muliple-choice" ||
+    currentQuestion.type === "multiple-choice" ||
     currentQuestion.type === "true-false"
   ) {
     createAnswerButtons(currentQuestion.answers);
@@ -149,6 +149,7 @@ nextBtn.addEventListener("click", () => {
     if (selectedAnswer && currentQuiz.correctAnswers.includes(selectedAnswer)) {
       score++;
     }
+    currentQuiz.yourAnswer = [selectedAnswer];
   } else if (currentQuiz.type === "checkbox") {
     const isCorrect =
       selectedAnswer &&
@@ -157,6 +158,7 @@ nextBtn.addEventListener("click", () => {
     if (isCorrect) {
       score++;
     }
+    currentQuiz.yourAnswer = selectedAnswer;
   }
 
   questionIndex++;
@@ -206,10 +208,11 @@ function showResults() {
   seeAnswers.innerHTML = "See you anwsers here";
   seeAnswers.classList.add("nextBtn");
   seeAnswers.style.display = "block";
-  seeAnswers.onclick = () => {
+  seeAnswers.addEventListener("click", () => {
+    console.log("Click");
     const displayResult = showEndResults();
     results.appendChild(displayResult);
-  };
+  });
 
   results.appendChild(seeAnswers);
   results.appendChild(playAgain);
@@ -217,14 +220,32 @@ function showResults() {
 
 startQuiz();
 
-// const showEndResults = ()=>{
-// const resultContainer = document.createElement("div");
+function showEndResults() {
+  const resultContainer = document.createElement("div");
 
-// myQuestions.forEach((question) => {
-//   const questionDiv = createElement("div");
-//   questionDiv.classList.add("questionResult");
+  myQuestions.forEach((question) => {
+    const questionDiv = document.createElement("div");
+    questionDiv.classList.add("questionResult");
 
-//   const correctQuestion = document.createElement("div");
-//   questionDiv.appendChild()
-// });
-// }
+    const questionTitle = document.createElement("h4");
+    questionTitle.textContent = question.question;
+    questionDiv.appendChild(questionTitle);
+
+    const correctAnswers = document.createElement("div");
+    correctAnswers.textContent =
+      "Correct Answer: " + question.correctAnswers.join(", ");
+    questionDiv.appendChild(correctAnswers);
+
+    const yourAnswers = document.createElement("div");
+    const userAnswers = Array.isArray(question.yourAnswer)
+      ? question.yourAnswer
+      : [];
+    yourAnswers.textContent =
+      "Your Answer: " + (userAnswers.length ? userAnswers.join(", ") : "None");
+    questionDiv.appendChild(yourAnswers);
+
+    resultContainer.appendChild(questionDiv);
+  });
+
+  return resultContainer;
+}
