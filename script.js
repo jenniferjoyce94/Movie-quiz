@@ -57,18 +57,10 @@ function startQuiz() {
   displayQuestion();
 }
 
-function toggleMode() {
+let darkMode = document.querySelector("#darkLightBtn");
+darkMode.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
-  const isDarkMode = document.classList.toggle("dark-mode");
-  localStorage.setItem("darkMode", isDark ? "enable" : "disable");
-}
-document.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("darkMode") === "enabled") {
-    document.body.classList.add("dark-mode");
-  }
 });
-
-document.querySelector("#darkLightBtn").addEventListener("click", toggleMode);
 
 function displayQuestion() {
   resetState();

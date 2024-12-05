@@ -4,6 +4,17 @@
   margin: 0;
   padding: 0;
 }
+body {
+  background: rgb(255, 255, 255);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(236, 236, 236, 1) 20%,
+    rgba(43, 43, 43, 1) 73%
+  );
+  width: 100vw;
+  height: 100vh;
+}
 
 :root {
   --background-color-light: #dbb648;
@@ -37,6 +48,17 @@ body.dark-mode .container {
   height: 25px;
   background-color: #2b2b2b;
   border-radius: 50%;
+}
+#darkLightBtn:hover {
+  background: var(--button-background-light);
+}
+
+body.dark-mode #darkLightBtn {
+  background: var(--button-background-dark);
+}
+body.dark-mode #darkLightBtn:hover {
+  background: var(--button-background-light);
+  border: none;
 }
 
 h1 {
@@ -136,14 +158,14 @@ div#alternativBtn {
   background: var(--button-background-light);
   color: var(--button-text-light);
   border: none;
-  margin: 10px 0;
+  margin: 15px 0;
   font-weight: 500;
   width: 100%;
-  padding: 10px;
-  text-align: left;
+  height: 45px;
   border-radius: 10px;
   font-size: 1.5rem;
   transition: all 0.2s;
+  box-sizing: border-box;
 }
 body.dark-mode .checkbox-container {
   background: var(--button-background-dark);
@@ -153,25 +175,38 @@ body.dark-mode .checkbox-container {
   background: var(--text-color-light);
   color: var(--background-color-light);
 }
+body.dark-mode .checkbox-container:hover {
+  background: var(--text-color-dark);
+  color: var(--background-color-dark);
+}
 
 .checkbox-container input[type="checkbox"] {
-  opacity: 0;
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .checkbox-container label {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-
+  cursor: pointer;
   width: 100%;
-  height: 100%;
 }
 
 .checkbox-container input[type="checkbox"]:checked + label {
   background: var(--text-color-light);
   color: var(--background-color-light);
   border-radius: 10px;
+}
+
+body.dark-mode input[type="checkbox"]:checked + label {
+  background: var(--text-color-dark);
+  color: var(--background-color-dark);
 }
