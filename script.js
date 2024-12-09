@@ -1,7 +1,7 @@
 const container = document.querySelector(".container");
 const quiz = document.querySelector(".quiz");
 const theQuestion = document.querySelector("#theQuestion");
-const alternativBtn = document.querySelector("#alternativBtn");
+const alternativeBtn = document.querySelector("#alternativeBtn");
 const nextBtn = document.querySelector(".nextBtn");
 const results = document.querySelector("#results");
 
@@ -11,7 +11,6 @@ const myQuestions = [
     question: "The Academy Awards are also known as the Oscars.",
     answers: ["True", "False"],
     correctAnswers: ["True"],
-    yourAnswer: [],
     type: "true-false",
   },
 
@@ -25,14 +24,16 @@ const myQuestions = [
 
   // Checkbox Questions
   {
-    question: "Which of these movies have won Best Picture?",
+    question:
+      "Which of these movies have won Best Picture? (You can select multiple answers)",
     answers: ["Titanic", "The Godfather", "Citizen Kane", "Forrest Gump"],
     correctAnswers: ["Titanic", "The Godfather", "Forrest Gump"],
     type: "checkbox",
   },
 
   {
-    question: "Which directors have won multiple Best Director Oscars?",
+    question:
+      "Which directors have won multiple Best Director Oscars? (You can select multiple answers)",
     answers: [
       "Steven Spielberg",
       "Clint Eastwood",
@@ -44,9 +45,9 @@ const myQuestions = [
   },
 ];
 
-let questionIndex = 0;
-let score = 0;
-let selectedAnswer = null;
+let questionIndex;
+let score;
+let selectedAnswer;
 
 function startQuiz() {
   questionIndex = 0;
@@ -67,12 +68,7 @@ function displayQuestion() {
   const currentQuestion = myQuestions[questionIndex];
   theQuestion.textContent = `${questionIndex + 1}. ${currentQuestion.question}`;
 
-  if (
-    currentQuestion.type === "multiple-choice" ||
-    currentQuestion.type === "true-false"
-  ) {
-    createAnswerButtons(currentQuestion.answers);
-  } else if (currentQuestion.type === "checkbox") {
+  if (currentQuestion.type === "checkbox") {
     createCheckboxOptions(currentQuestion.answers);
   } else {
     createAnswerButtons(currentQuestion.answers);
@@ -85,7 +81,7 @@ function createAnswerButtons(answers) {
     button.textContent = answer;
     button.classList.add("answerBtn");
     button.addEventListener("click", () => selectAnswer(button));
-    alternativBtn.appendChild(button);
+    alternativeBtn.appendChild(button);
   });
 }
 
@@ -106,13 +102,13 @@ function createCheckboxOptions(answers) {
 
     checkboxContainer.appendChild(checkbox);
     checkboxContainer.appendChild(label);
-    alternativBtn.appendChild(checkboxContainer);
+    alternativeBtn.appendChild(checkboxContainer);
   });
 }
 
 function resetState() {
   nextBtn.style.display = "none";
-  alternativBtn.innerHTML = "";
+  alternativeBtn.innerHTML = "";
   selectedAnswer = null;
 }
 
@@ -121,7 +117,7 @@ function selectAnswer(button) {
     myQuestions[questionIndex].type === "multiple-choice" ||
     myQuestions[questionIndex].type === "true-false"
   ) {
-    Array.from(alternativBtn.children).forEach((btn) => {
+    Array.from(alternativeBtn.children).forEach((btn) => {
       btn.classList.remove("selected");
     });
     button.classList.add("selected");
@@ -129,12 +125,11 @@ function selectAnswer(button) {
     nextBtn.style.display = "block";
   } else if (myQuestions[questionIndex].type === "checkbox") {
     selectedAnswer = Array.from(
-      alternativBtn.querySelectorAll("input[type='checkbox']:checked")
+      alternativeBtn.querySelectorAll("input[type='checkbox']:checked")
     ).map((checkbox) => checkbox.value);
     if (selectedAnswer.length !== 0) {
       nextBtn.style.display = "block";
     } else {
-      console.log("test");
       nextBtn.style.display = "none";
     }
   }
@@ -142,25 +137,21 @@ function selectAnswer(button) {
 
 nextBtn.addEventListener("click", () => {
   const currentQuiz = myQuestions[questionIndex];
-  if (
-    currentQuiz.type === "multiple-choice" ||
-    currentQuiz.type === "true-false"
-  ) {
-    if (selectedAnswer && currentQuiz.correctAnswers.includes(selectedAnswer)) {
-      score++;
-    }
-    currentQuiz.yourAnswer = [selectedAnswer];
-  } else if (currentQuiz.type === "checkbox") {
-    const isCorrect =
+  let isCorrect = false;
+  if (currentQuiz.type === "checkbox") {
+    isCorrect =
       selectedAnswer &&
       selectedAnswer.length === currentQuiz.correctAnswers.length &&
       selectedAnswer.every((ans) => currentQuiz.correctAnswers.includes(ans));
-    if (isCorrect) {
-      score++;
-    }
     currentQuiz.yourAnswer = selectedAnswer;
+  } else {
+    isCorrect =
+      selectedAnswer && currentQuiz.correctAnswers.includes(selectedAnswer);
+    currentQuiz.yourAnswer = [selectedAnswer];
   }
-
+  if (isCorrect) {
+    score++;
+  }
   questionIndex++;
   if (questionIndex < myQuestions.length) {
     displayQuestion();
