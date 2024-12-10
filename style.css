@@ -1,18 +1,20 @@
-/*# sourceMappingURL=style.css.map */
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 * {
   margin: 0;
   padding: 0;
+  font-family: "Playfair Display", serif;
 }
 body {
-  background: rgb(255, 255, 255);
+  /* background: rgb(255, 255, 255);
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 1) 0%,
     rgba(43, 43, 43, 1) 100%
-  );
+  ); */
+  background-image: url(images/HyadesY16JanD07-2dc9bb4.webp);
   width: 100vw;
-  height: 100vh;
+  height: auto;
 }
 
 :root {
@@ -32,7 +34,8 @@ body {
   color: var(--text-color-light);
   width: 90%;
   max-width: 700px;
-  margin: 100px auto 0;
+  box-sizing: border-box;
+  margin: 100px auto;
   border-radius: 10px;
   padding: 20px;
 }
@@ -42,22 +45,31 @@ body.dark-mode .container {
   color: var(--text-color-dark);
 }
 #darkLightBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-left: 95%;
-  width: 25px;
-  height: 25px;
-  background-color: #2b2b2b;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
+  font-size: 1.5rem;
+  transition: all 0.3s;
+  border: none;
+  background: var(--background-color-dark);
 }
 #darkLightBtn:hover {
   background: var(--button-background-light);
+  color: var(--background-color-dark);
+  transform: scale(1.1);
+}
+body.dark-mode #darkLightBtn {
+  border: #dbb648 solid 1px;
 }
 
-body.dark-mode #darkLightBtn {
-  background: var(--button-background-dark);
-}
 body.dark-mode #darkLightBtn:hover {
   background: var(--button-background-light);
-  border: none;
+  color: var(--background-color-light);
+  border: var(--button-background-dark);
 }
 
 h1 {
@@ -107,16 +119,17 @@ p {
 }
 
 body.dark-mode .answerBtn {
-  background: var(--background-color-light);
-  color: var(--text-color-light);
+  background: var(--background-color-dark);
+  color: var(--text-color-dark);
+  border: #dbb648 1px solid;
 }
 body.dark-mode .answerBtn:hover {
   background: var(--text-color-dark);
   color: var(--background-color-dark);
 }
 body.dark-mode .answerBtn.selected {
-  background: var(--background-color-dark);
-  color: var(--text-color-dark);
+  background: var(--background-color-light);
+  color: var(--text-color-light);
 }
 
 .nextBtn {
@@ -128,6 +141,9 @@ body.dark-mode .answerBtn.selected {
   margin: 20px auto 0;
   padding: 10px;
   display: none;
+}
+body.dark-mode .nextBtn {
+  border: #dbb648 1px solid;
 }
 
 .nextBtn:hover {
@@ -157,26 +173,27 @@ div#alternativBtn {
   background: var(--button-background-light);
   color: var(--button-text-light);
   border: none;
-  margin: 15px 0;
+  margin: 15px;
   font-weight: 500;
   width: 100%;
-  height: 45px;
   border-radius: 10px;
   font-size: 1.5rem;
   transition: all 0.2s;
   box-sizing: border-box;
 }
 body.dark-mode .checkbox-container {
-  background: var(--button-background-dark);
-  color: var(--text-color-light);
+  background: var(--background-color-dark);
+  color: var(--text-color-dark);
+  border: #dbb648 solid 1px;
 }
 .checkbox-container:hover {
   background: var(--text-color-light);
   color: var(--background-color-light);
 }
 body.dark-mode .checkbox-container:hover {
-  background: var(--text-color-dark);
-  color: var(--background-color-dark);
+  background: var(--background-color-light);
+  color: var(--text-color-light);
+  border: #dbb648 1px solid;
 }
 
 .checkbox-container input[type="checkbox"] {
@@ -197,7 +214,7 @@ body.dark-mode .checkbox-container:hover {
   justify-content: flex-start;
   cursor: pointer;
   width: 100%;
-  margin-left: 10px;
+  padding: 10px;
 }
 
 .checkbox-container input[type="checkbox"]:checked + label {
@@ -205,6 +222,12 @@ body.dark-mode .checkbox-container:hover {
   color: var(--background-color-light);
   border-radius: 10px;
   border: #dbb648 solid 2px;
+  width: 100%;
+  height: auto;
+}
+body.dark-mode .checkbox-container input[type="checkbox"]:checked + label {
+  background: var(--background-color-light);
+  color: var(--text-color-light);
 }
 
 div.questionResult {
@@ -214,4 +237,8 @@ div.questionResult {
 }
 h4 {
   border-bottom: #2b2b2b solid 1px;
+}
+
+body.dark-mode h4 {
+  border-bottom: #dbb648 solid 1px;
 }
