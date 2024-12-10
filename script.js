@@ -61,6 +61,9 @@ function startQuiz() {
 let darkMode = document.querySelector("#darkLightBtn");
 darkMode.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
+  darkLightBtn.innerHTML = document.body.classList.contains("dark-mode")
+    ? "🌙"
+    : "☀️";
 });
 
 function displayQuestion() {
