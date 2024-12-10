@@ -179,7 +179,7 @@ function showResults() {
   } else if (getProcent >= 50 && getProcent <= 75) {
     resultMessage =
       "You know most things, but maybe you missed the end credits!";
-    resultColor = "orangered";
+    resultColor = "orange";
   } else {
     resultMessage =
       "PERFECTION! You are like Quentin Tarantino and Steven Spielberg all in one person!";
